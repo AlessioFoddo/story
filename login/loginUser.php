@@ -24,6 +24,6 @@
 
         echo "CIAO: " . htmlspecialchars($row["Username"]);
     } else {
-        echo "Utente non trovato o password errata.";
+        header('Location: ../errors/pages/create-account.html');
     }
 ?>
