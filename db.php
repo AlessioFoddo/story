@@ -4,11 +4,17 @@ $username = "root";
 $password = "";
 $dbname = "storia";
 
-// Connessione al database
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verifica connessione
-if ($conn->connect_error) {
-    die("Connessione fallita: " . $conn->connect_error);
+try {
+    // Create PDO connection
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+    
+    // Set PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Optional: Set default fetch mode to associative array
+    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    
+} catch(PDOException $e) {
+    die("Connessione fallita: " . $e->getMessage());
 }
 ?>
