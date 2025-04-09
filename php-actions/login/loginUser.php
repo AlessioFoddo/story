@@ -20,8 +20,7 @@ try {
             header('Location: ../../admin/admin_prova.php');
             exit;
         }
-
-        echo "CIAO: " . htmlspecialchars($user["Username"]);
+        header('Location: ../../html-pages/user.html');
     } else {
         header('Location: ../../index.html');
         exit;
