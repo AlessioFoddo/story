@@ -20,7 +20,7 @@ try {
             header('Location: ../../admin/admin_prova.php');
             exit;
         }
-        header('Location: ../../html-pages/user.html');
+        header('Location: ../../php-pages/user.php');
     } else {
         header('Location: ../../index.html');
         exit;
