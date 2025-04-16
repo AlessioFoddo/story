@@ -51,53 +51,35 @@
                             $num_tmp = 1;
                             foreach ($chapters as $chp): 
                                 $collapseId = "collapseExample" . $num_tmp;
-                    ?>
-                                <p class="d-inline-flex gap-1 mb-2">
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>" aria-expanded="false" aria-controls="<?= $collapseId ?>">
-                                        Capitolo <?= $num_tmp ?>
-                                    </button>
-                                </p>
-                                <div class="collapse mb-3" id="<?= $collapseId ?>">
-                                    <div class="card card-body">
-                                    <?php
-                                    var_dump($chp["ID_Capitolo"])
-                                        // try {
-                                        //     $sql = "SELECT file FROM capitoli WHERE id_capitolo = ?";
-                                        //     $stmt = $conn->prepare($sql);
-                                        //     $stmt->execute([$chp["ID_Capitolo"]]);
-                                            
-                                        //     // Recupera il contenuto binario del PDF
-                                        //     $pdfContent = $stmt->fetchColumn();
-                                            
-                                        //     if ($pdfContent) {
-                                        //         header("Content-Type: application/pdf");
-                                        //         echo $pdfContent;
-                                        //         exit; // Importante per evitare output aggiuntivo
-                                        //     } else {
-                                        //         echo "PDF non trovato!";
-                                        //     }
-                                            
-                                        // } catch(PDOException $e) {
-                                        //     die("Errore durante il recupero del PDF: " . $e->getMessage());
-                                        // } finally {
-                                        //     $stmt = null; // Chiude lo statement
-                                        // }
-                                    ?>
-                                    </div>
+                ?>
+                            <p class="d-inline-flex gap-1 mb-2">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>" aria-expanded="false" aria-controls="<?= $collapseId ?>">
+                                    Capitolo <?= $num_tmp ?>
+                                </button>
+                            </p>
+                            <div class="collapse mb-3" id="<?= $collapseId ?>">
+                                <div class="card card-body">
+                                <?php
+                                    echo $chp["Riassunto"];
+                                ?>
+                                <form action="./chapter.php" method="POST">
+                                    <input type="hidden" name="id_chapter" type="number" value='<?php  echo($chp["ID_Capitolo"])?>'>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
                                 </div>
-                    <?php
+                            </div>
+                <?php
                                 $num_tmp++;
                             endforeach;
                         else:
                             echo "<div class='alert alert-warning'>PDF non trovato!</div>";
                         endif;
-
                     } catch (PDOException $e) {
                         echo "<div class='alert alert-danger'>Errore durante il recupero del PDF: " . htmlspecialchars($e->getMessage()) . "</div>";
                     } finally {
                         $stmt = null;
                     }
-                    ?>
+                ?>
                 </div>
             </div>
         </div>
