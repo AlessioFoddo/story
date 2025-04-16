@@ -12,7 +12,7 @@
     <title>Document</title>
 </head>
 
-<body id="index-main">
+<body>
     <div class="mx-5">
         <div class="row">
             <div class="col-3">
@@ -39,42 +39,64 @@
                     CUORI IN CONTRASTO
                 </h1>
                 <div class="container row">
+                <?php
+                    try {
+                        $sql = "SELECT * FROM capitoli";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute();
+
+                        $chapters = $stmt->fetchAll();
+
+                        if ($chapters):
+                            $num_tmp = 1;
+                            foreach ($chapters as $chp): 
+                                $collapseId = "collapseExample" . $num_tmp;
+                    ?>
+                                <p class="d-inline-flex gap-1 mb-2">
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>" aria-expanded="false" aria-controls="<?= $collapseId ?>">
+                                        Capitolo <?= $num_tmp ?>
+                                    </button>
+                                </p>
+                                <div class="collapse mb-3" id="<?= $collapseId ?>">
+                                    <div class="card card-body">
+                                    <?php
+                                    var_dump($chp["ID_Capitolo"])
+                                        // try {
+                                        //     $sql = "SELECT file FROM capitoli WHERE id_capitolo = ?";
+                                        //     $stmt = $conn->prepare($sql);
+                                        //     $stmt->execute([$chp["ID_Capitolo"]]);
+                                            
+                                        //     // Recupera il contenuto binario del PDF
+                                        //     $pdfContent = $stmt->fetchColumn();
+                                            
+                                        //     if ($pdfContent) {
+                                        //         header("Content-Type: application/pdf");
+                                        //         echo $pdfContent;
+                                        //         exit; // Importante per evitare output aggiuntivo
+                                        //     } else {
+                                        //         echo "PDF non trovato!";
+                                        //     }
+                                            
+                                        // } catch(PDOException $e) {
+                                        //     die("Errore durante il recupero del PDF: " . $e->getMessage());
+                                        // } finally {
+                                        //     $stmt = null; // Chiude lo statement
+                                        // }
+                                    ?>
+                                    </div>
+                                </div>
                     <?php
-                        try {
-                            $sql = "SELECT * FROM capitoli";
-                            $stmt = $conn->prepare($sql);
-                            $stmt->execute();
-                            
-                            // Recupera il contenuto binario del PDF
-                            $chapters = $stmt->fetchAll();
-                            
-                            if ($chapters) {
-                                $num_tmp = 1;
-                                foreach ($chapters as $chp) {
-                                    echo "
-                                            <p class='d-inline-flex gap-1'>
-                                                <button class='btn btn-primary collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseExample$num_tmp' aria-expanded='false' aria-controls='collapseExample'>
-                                                    Button with data-bs-target
-                                                </button>
-                                            </p>
-                                            <div class='collapse' id='collapseExample$num_tmp'>
-                                                <div class='card card-body'>
-                                                    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-                                                </div>
-                                            </div>
-                                        ";
-                                    $num_tmp++;
-                                }
-                                exit; // Importante per evitare output aggiuntivo
-                            } else {
-                                echo "PDF non trovato!";
-                            }
-                            
-                        } catch(PDOException $e) {
-                            die("Errore durante il recupero del PDF: " . $e->getMessage());
-                        } finally {
-                            $stmt = null; // Chiude lo statement
-                        }
+                                $num_tmp++;
+                            endforeach;
+                        else:
+                            echo "<div class='alert alert-warning'>PDF non trovato!</div>";
+                        endif;
+
+                    } catch (PDOException $e) {
+                        echo "<div class='alert alert-danger'>Errore durante il recupero del PDF: " . htmlspecialchars($e->getMessage()) . "</div>";
+                    } finally {
+                        $stmt = null;
+                    }
                     ?>
                 </div>
             </div>
