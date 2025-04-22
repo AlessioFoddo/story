@@ -1,7 +1,7 @@
 <?php
 include("../db.php");
 
-$id = $_GET["id_chapter"] ?? null;
+$id = $_GET["id_chapter"];
 
 if (!$id) {
     die("ID capitolo non specificato.");

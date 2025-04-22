@@ -1,5 +1,6 @@
 <?php
 include("../../db.php");
+session_start();
 
 try {
     $name = $_POST["username"] ?? '';
@@ -16,15 +17,11 @@ try {
         $query = "INSERT INTO User (Username, Password) VALUES (?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->execute([$name, $psw]);
-        $user = $stmt->fetch();
-        $query = "SELECT user.ID FROM user WHERE Username = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->execute([$name]);
-        $id = $stmt->fetch();
+        $id = $conn->lastInsertId();
+        $_SESSION["id_utente"] = $id;
         $query = "INSERT INTO utenti (ID) VALUES (?);";
         $stmt = $conn->prepare($query);
-        $stmt->execute([$id["ID"]]);
-        $user = $stmt->fetch();
+        $stmt->execute([$id]);
         header('Location: ../../html-pages/advice-pages/user-created.html');
         exit;
     }

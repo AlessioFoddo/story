@@ -1,5 +1,6 @@
 <?php
 include("../../db.php");
+session_start();
 
 try {
     $name = $_POST["username"] ?? '';
@@ -12,6 +13,7 @@ try {
 
     if ($user) {
         // Check if user is admin
+        $_SESSION["id_utente"] = $user["ID"];
         $adminQuery = "SELECT * FROM admin WHERE ID = ?";
         $adminStmt = $conn->prepare($adminQuery);
         $adminStmt->execute([$user['ID']]);

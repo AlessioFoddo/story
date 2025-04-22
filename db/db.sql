@@ -38,11 +38,14 @@ CREATE TABLE Pubblicazione (
 
 -- Tabella Recensioni
 CREATE TABLE Recensioni (
-    ID_Recensione INT AUTO_INCREMENT PRIMARY KEY,
-    File LONGBLOB NOT NULL
+    ID_Recensione INT AUTO_INCREMENT,
+    ID INT,
+    File LONGBLOB NOT NULL,
+    PRIMARY KEY (ID_Recensione),
+    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
 );
 
--- Tabella Recensione_capitolo (collega recensioni ai capitoli)
+-- Tabella Recensione_capitolo
 CREATE TABLE Recensione_capitolo (
     ID_Recensione INT,
     ID_Capitolo INT,
@@ -51,7 +54,7 @@ CREATE TABLE Recensione_capitolo (
     FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
 );
 
--- Tabella Recensione_storia (collega recensioni alle storie, riferendosi all'User)
+-- Tabella Recensione_storia
 CREATE TABLE Recensione_storia (
     ID_Recensione INT,
     ID INT,
