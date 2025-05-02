@@ -54,6 +54,14 @@ CREATE TABLE Recensione_capitolo (
     FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
 );
 
+CREATE TABLE Capitoli_preferiti (
+	ID INT,
+    ID_Capitolo INT,
+    PRIMARY KEY (ID, ID_Capitolo),
+    FOREIGN KEY (ID) REFERENCES utenti(ID) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
+);
+
 -- Tabella Recensione_storia
 CREATE TABLE Recensione_storia (
     ID_Recensione INT,

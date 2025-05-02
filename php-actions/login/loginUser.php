@@ -12,12 +12,12 @@ try {
     $user = $stmt->fetch();
 
     if ($user) {
+        $_SESSION["id_utente"] = $user["ID"];
         // Check if user is admin
         $_SESSION["id_utente"] = $user["ID"];
         $adminQuery = "SELECT * FROM admin WHERE ID = ?";
         $adminStmt = $conn->prepare($adminQuery);
         $adminStmt->execute([$user['ID']]);
-        
         if ($adminStmt->fetch()) {
             header('Location: ../../admin/admin_prova.php');
             exit;
