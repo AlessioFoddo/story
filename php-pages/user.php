@@ -2,8 +2,16 @@
     include("../db.php");
     session_start();
     if ($_SESSION["id_utente"] == null) {
-        header("Location: ../index.html");
+        header("Location: ../index.php");
         exit();
+    }else{
+        $query = "SELECT * FROM admin WHERE ID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$_SESSION["id_utente"]]);
+        if ($stmt->rowCount() != 0) {
+            header("Location: ../index.php");
+            exit();
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -127,16 +135,6 @@
                     </button>
                 </form>
 
-                <!--home-->
-                <form action="../index.html">
-                    <button>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
-                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
-                            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
-                        </svg>
-                    </button>
-                </form>
-
                 <!--profilo utente-->
                 <form action="./user_profile.php">
                     <button>
@@ -153,7 +151,7 @@
                         <?php
                             else:
                         ?>
-                            <img src="../php-actions/get_pfp.php" alt="Immagine Profilo" width="100%" class="rounded-circle">
+                            <img src="../php-actions/get_pfp.php" alt="Immagine Profilo" width="100%" class="rounded-circle border border-1 border-dark">
                         <?php
                             endif;
                         ?>

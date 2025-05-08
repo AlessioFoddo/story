@@ -6,27 +6,29 @@ try {
     $name = $_POST["username"] ?? '';
     $psw = $_POST["password"] ?? '';
 
-    $query = "SELECT * FROM user WHERE Username = ? AND Password = ?";
+    $query = "SELECT * FROM user WHERE Username = ?";
     $stmt = $conn->prepare($query);
-    $stmt->execute([$name, $psw]);
+    $stmt->execute([$name]);
     $user = $stmt->fetch();
 
     if ($user) {
-        $_SESSION["id_utente"] = $user["ID"];
-        // Check if user is admin
-        $_SESSION["id_utente"] = $user["ID"];
-        $adminQuery = "SELECT * FROM admin WHERE ID = ?";
-        $adminStmt = $conn->prepare($adminQuery);
-        $adminStmt->execute([$user['ID']]);
-        if ($adminStmt->fetch()) {
-            header('Location: ../../admin/admin_prova.php');
+        // Verify password
+        if (password_verify($psw, $user["Password"])) {
+            $_SESSION["id_utente"] = $user["ID"];
+            // Check if user is admin
+            $adminQuery = "SELECT * FROM admin WHERE ID = ?";
+            $adminStmt = $conn->prepare($adminQuery);
+            $adminStmt->execute([$user['ID']]);
+            if ($adminStmt->fetch()) {
+                header('Location: ../../php-pages/admin.php');
+                exit;
+            }
+            header('Location: ../../php-pages/user.php');
             exit;
         }
-        header('Location: ../../php-pages/user.php');
-    } else {
-        header('Location: ../../index.html');
-        exit;
     }
+    header('Location: ../../index.php');
+    exit;
 
 } catch(PDOException $e) {
     die("Errore del database: " . $e->getMessage());

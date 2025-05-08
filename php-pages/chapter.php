@@ -8,8 +8,16 @@ if (isset($_POST['id_chapter'])) {
   $id = $_GET['id_chapter'];
 }
 if ($_SESSION["id_utente"] == null) {
-  header("Location: ../index.html");
+  header("Location: ../index.php");
   exit();
+}else{
+  $query = "SELECT * FROM admin WHERE ID = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->execute([$_SESSION["id_utente"]]);
+  if ($stmt->rowCount() != 0) {
+      header("Location: ../index.php");
+      exit();
+  }
 }
 ?>
 <!DOCTYPE html>

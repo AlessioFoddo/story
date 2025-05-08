@@ -70,7 +70,3 @@ CREATE TABLE Recensione_storia (
     FOREIGN KEY (ID_Recensione) REFERENCES Recensioni(ID_Recensione) ON DELETE CASCADE,
     FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
 );
-
--- Aggiunta di un Admin
-INSERT INTO User (Username, Password) VALUES ('foddo', 'JyleAlice');
-INSERT INTO Admin (ID) VALUES (1);

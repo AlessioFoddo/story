@@ -1,0 +1,44 @@
+main{
+    width: 90vw;
+    margin: 5vh auto;
+}
+
+.opzione-gestioni{
+    margin: 5vh 0;
+}
+
+.btn-gestione {
+    width: 75%;
+    padding: 5vw 5vw;
+    background-image: radial-gradient(circle at center, rgb(163, 156, 215) 0%, rgb(7, 0, 206) 100%);
+    background-size: 100% 100%;
+    background-position: center;
+    transition: all 0.2s ease;
+    color: black;
+}
+
+  
+.btn-storia:hover {
+    background-image: radial-gradient(circle at center, rgb(199, 155, 22) 0%, rgb(23, 27, 134) 100%);
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.btn-utenti:hover {
+    background-image: radial-gradient(circle at center, rgb(24, 183, 50) 0%, rgb(23, 27, 134) 100%);
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.btn-recensioni:hover {
+    background-image: radial-gradient(circle at center, rgb(89, 49, 20) 0%, rgb(23, 27, 134) 100%);
+    background-size: 100% 100%;
+    background-position: center;
+    color: white;
+}
+  
+  

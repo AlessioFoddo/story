@@ -16,6 +16,7 @@ try {
     } else {
         $query = "INSERT INTO User (Username, Password) VALUES (?, ?)";
         $stmt = $conn->prepare($query);
+        $psw = password_hash($psw, PASSWORD_DEFAULT);
         $stmt->execute([$name, $psw]);
         $id = $conn->lastInsertId();
         $_SESSION["id_utente"] = $id;

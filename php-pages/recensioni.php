@@ -1,16 +1,37 @@
 
 <?php
-include("../db.php");
-session_start();
-if (isset($_POST['id_chapter'])) {
-  $id = $_POST['id_chapter'];
-} elseif (isset($_GET['id_chapter'])) {
-  $id = $_GET['id_chapter'];
+  include("../db.php");
+  session_start();
+  if (isset($_POST['id_chapter'])) {
+    $id = $_POST['id_chapter'];
+  } elseif (isset($_GET['id_chapter'])) {
+    $id = $_GET['id_chapter'];
+  }
+  if ($_SESSION["id_utente"] == null) {
+    header("Location: ../index.php");
+    exit();
+  }else{
+  $query = "SELECT * FROM admin WHERE ID = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->execute([$_SESSION["id_utente"]]);
+  if ($stmt->rowCount() == 0) {
+      header("Location: ../index.php");
+      exit();
+  }
+}else{
+  $query = "SELECT * FROM admin WHERE ID = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->execute([$_SESSION["id_utente"]]);
+  if ($stmt->rowCount() != 0) {
+      header("Location: ../index.php");
+      exit();
+  }
 }
-if ($_SESSION["id_utente"] == null) {
-  header("Location: ../index.html");
-  exit();
-}
+  if(isset($_POST["tipo_recensioni"])){
+    $type_recensioni = $_POST["tipo_recensioni"];
+  } else {
+    $type_recensioni = "personal";
+  }
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -21,85 +42,171 @@ if ($_SESSION["id_utente"] == null) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/chapter.css">
     <link rel="stylesheet" href="../css/user-page.css">
+    <link rel="stylesheet" href="../css/recensioni.css">
   <title>Recensioni</title>
 </head>
 <body>
+  <h1 class="text-center">CUORI IN CONTRASTO</h1>
+  <form action="./user.php" class="my-2">
+    <button class="btn btn-outline-primary">
+      BACK
+    </button>
+  </form>
   <div class="row ">
-    <div class="col-4">
-      <img width="100%" src="../images/piggyback.jpg" alt="">
-    </div>
-    <div class="col-4">
-      <h1>CUORI IN CONTRASTO</h1>
-      <h2>Le tue recensioni:</h2>
+    <div class="col-5">
+      <h2 class="mb-3">Le ultime recensioni:</h2>
       <div class="row">
-          <form class="my-4" action="./user.php">
-            <button class="btn btn-outline-primary">BACK</button>
-          </form>
         <?php
-            $query = "SELECT * FROM capitoli_preferiti WHERE ID = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->execute([$_SESSION["id_utente"]]);
-            $capitoli_preferiti = $stmt->fetchAll();
-            if($capitoli_preferiti):
-              $num_tmp = 1;
-              foreach ($capitoli_preferiti as $chp):   
-                $query = "SELECT * FROM capitoli WHERE ID_Capitolo = ?";
-                $stmt = $conn->prepare($query);
-                $stmt->execute([$chp["ID_Capitolo"]]);
-                $chp = $stmt->fetch();
-
-                $collapseId = "collapseExample" . $num_tmp;
-
-                //conteggio recensioni per singolo capitolo
-                $sql = "SELECT * FROM recensione_capitolo WHERE ID_Capitolo = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([$chp["ID_Capitolo"]]);
-
-                $recensioni = $stmt->fetchAll();
-            ?>
-                <div class="card card-capitolo my-1">
-                    <div class="titolo-capitolo my-2">
-                        <p>
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $collapseId ?>" aria-expanded="false" aria-controls="<?= $collapseId ?>">
-                                Capitolo <?= $chp["ID_Capitolo"] ?>
-                            </button>
-                        </p>
-                        <p class="titolo">
-                            <?= $chp["Titolo"] ?>
-                        </p>
-                        <div class="recensioni">
-                            <p class="numero">
-                                <?= count($recensioni) ?>
-                            </p>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
-                                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="collapse mb-3" id="<?= $collapseId ?>">
-                        <div class="card card-body">
-                        <?php
-                            echo $chp["Riassunto"];
-                        ?>
-                        <form class="capitolo" action="./chapter.php" method="POST">
-                            <input type="hidden" name="id_chapter" type="number" value='<?php  echo($chp["ID_Capitolo"])?>'>
-                            <button type="submit" class="btn btn-primary">LEGGI</button>
-                        </form>
-                        </div>
-                    </div>
-                </div>
+          $query = "SELECT * FROM recensioni ORDER BY ID_Recensione DESC LIMIT 4";
+          $stmt = $conn->prepare($query);
+          $stmt->execute();
+          $last_recensioni = $stmt->fetchAll();
+          if($last_recensioni):
+            $num_tmp = 1;
+            foreach ($last_recensioni as $lastr):      
+        ?>
+        <div class="card card-capitolo my-1">
+          <div class="titolo-capitolo mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25px" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+            </svg>
+          </div>
+          <div class="card card-body recensione">
             <?php
-                        $num_tmp++;
-                    endforeach;
-                else:
-                    echo "<div class='alert alert-warning'>PDF non trovato!</div>";
-                endif;
+              echo $lastr["File"];
             ?>
+          </div>
+        </div>
+        <?php
+            $num_tmp++;
+            endforeach;
+          else:
+            echo "<div class='alert alert-danger'>Non ci sono recensioni!</div>";
+          endif;
+        ?>
       </div>
     </div>
-    <div class="col-4">
-      <img width="100%" src="../images/piggyback.jpg" alt="">
+    <div class="col-1"></div>
+    <div class="col-6">
+      <form class="d-flex justify-content-between" action="./recensioni.php" method="POST">
+        <select name="tipo_recensioni" class="w-75 form-select my-2">
+          <option value="personal" <?= $type_recensioni == "personal" ? "selected" : "" ?>>Le tue recensioni</option>
+          <option value="story" <?= $type_recensioni == "story" ? "selected" : "" ?>>Recensioni storia</option>
+          <option value="chapter" <?= $type_recensioni == "chapter" ? "selected" : "" ?>>Recensioni capitoli</option>
+        </select>
+        <button class="btn btn-outline-primary">
+          FILTRA
+        </button>
+      </form>
+      <div class="row">
+        <?php
+          switch ($type_recensioni) :
+            case "story":
+              $query = "SELECT * FROM recensioni JOIN recensione_storia ON recensioni.ID_Recensione = recensione_storia.ID_Recensione";
+              $stmt = $conn->prepare($query);
+              $stmt->execute();
+              $story_recensione = $stmt->fetchAll();
+              if($story_recensione):
+                $num_tmp = 1;
+                foreach ($story_recensione as $storyfb):      
+        ?>
+                  <div class="card card-capitolo my-1">
+                    <div class="titolo-capitolo mt-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                      </svg>
+                    </div>
+                    <div class="card card-body recensione">
+                      <?php
+                        echo $storyfb["File"];
+                      ?>
+                    </div>
+                  </div>
+        <?php
+                $num_tmp++;
+                endforeach;
+              else:
+                echo "<div class='alert alert-danger'>Non ci sono recensioni!</div>";
+              endif;
+              break;
+        ?>
+        <?php
+            case "chapter":
+              $query = "SELECT * FROM recensioni JOIN recensione_capitolo ON recensioni.ID_Recensione = recensione_capitolo.ID_Recensione";
+              $stmt = $conn->prepare($query);
+              $stmt->execute();
+              $chapter_recensione = $stmt->fetchAll();
+              if($chapter_recensione):
+                $num_tmp = 1;
+                foreach ($chapter_recensione as $chpfb):      
+        ?>
+                  <div class="card card-capitolo my-1">
+                    <div class="titolo-capitolo mt-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                      </svg>
+                    </div>
+                    <div class="card card-body recensione">
+                      <?php
+                        echo $chpfb["File"];
+                      ?>
+                    </div>
+                  </div>
+        <?php
+                $num_tmp++;
+                endforeach;
+              else:
+                echo "<div class='alert alert-danger'>Non ci sono recensioni!</div>";
+              endif;
+              break;
+        ?>
+        <?php
+            case "personal":
+            default:
+              $query = "SELECT * FROM recensioni WHERE ID = ?";
+              $stmt = $conn->prepare($query);
+              $stmt->execute([$_SESSION["id_utente"]]);
+              $user_recensioni = $stmt->fetchAll();
+              if($user_recensioni):
+                $num_tmp = 1;
+                foreach ($user_recensioni as $userfb):      
+        ?>
+                  <div class="card card-capitolo my-1">
+                    <div class="titolo-capitolo mt-2">
+                      <?php
+                        $query = "SELECT * FROM user WHERE ID = ?";
+                        $stmt = $conn->prepare($query);
+                        $stmt->execute([$userfb["ID"]]);
+                        $user = $stmt->fetch();
+                        if($user["profile_image"] == null):
+                      ?>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                        </svg>
+                      <?php
+                        else:
+                      ?>
+                        <img src="../php-actions/get_pfp.php" alt="Immagine Profilo" width="25px" height="25px" class="rounded-circle">
+                      <?php
+                        endif;
+                      ?>
+                    </div>
+                    <div class="card card-body recensione">
+                      <?php
+                        echo $userfb["File"];
+                      ?>
+                    </div>
+                  </div>
+        <?php
+              $num_tmp++;
+              endforeach;
+            else:
+              echo "<div class='alert alert-danger'>Non ci sono recensioni!</div>";
+            endif;
+        
+          endswitch;
+        ?>
+      </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

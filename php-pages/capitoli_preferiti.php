@@ -8,8 +8,16 @@ if (isset($_POST['id_chapter'])) {
   $id = $_GET['id_chapter'];
 }
 if ($_SESSION["id_utente"] == null) {
-  header("Location: ../index.html");
+  header("Location: ../index.php");
   exit();
+}else{
+    $query = "SELECT * FROM admin WHERE ID = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$_SESSION["id_utente"]]);
+    if ($stmt->rowCount() != 0) {
+        header("Location: ../index.php");
+        exit();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -23,8 +31,8 @@ if ($_SESSION["id_utente"] == null) {
     <link rel="stylesheet" href="../css/user-page.css">
   <title>Capitoli preferiti</title>
 </head>
-<body>
-  <div class="row ">
+<body style="padding: 0;">
+  <div class="row">
     <div class="col-4">
       <img width="100%" src="../images/piggyback.jpg" alt="">
     </div>
@@ -93,7 +101,7 @@ if ($_SESSION["id_utente"] == null) {
                         $num_tmp++;
                     endforeach;
                 else:
-                    echo "<div class='alert alert-warning'>PDF non trovato!</div>";
+                    echo "<div class='alert alert-warning'>NON CI SONO CAPITOLI PREFERITI!</div>";
                 endif;
             ?>
       </div>

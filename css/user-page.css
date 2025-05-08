@@ -70,6 +70,13 @@ body{
     width: 23%;
 }
 
+.pfp{
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    border: 2px dashed black;
+}
+
 .contenuto{
     margin-left: 25%;
     margin-right: 6%;
