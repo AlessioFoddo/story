@@ -46,3 +46,44 @@ main{
     flex-direction: column;
     justify-content: space-between;
 }
+
+.title-modifica{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.btn-modifica{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.div-chibi{
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+.btn-chibi{
+    width: 25%;
+}
+
+.btn-jyle:hover{
+    cursor: pointer;
+    content: url("../images/idea-lamp-jyle.png");
+    width: 30%;
+}
+
+.btn-alice:hover{
+    cursor: pointer;
+    content: url("../images/happy-alice-star.png");
+    width: 30%;
+}
+
+.alert-message{
+    height: 3vh;
+    padding: 0;
+}

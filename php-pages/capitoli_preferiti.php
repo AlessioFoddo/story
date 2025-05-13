@@ -27,16 +27,15 @@ if ($_SESSION["id_utente"] == null) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/chapter.css">
     <link rel="stylesheet" href="../css/user-page.css">
+    <link rel="stylesheet" href="../css/background.css">
   <title>Capitoli preferiti</title>
 </head>
 <body style="padding: 0;">
   <div class="row">
-    <div class="col-4">
-      <img width="100%" src="../images/piggyback.jpg" alt="">
+    <div class="col-2">
     </div>
-    <div class="col-4">
+    <div class="col-8">
       <h1>CUORI IN CONTRASTO</h1>
       <h2>Capitoli preferiti:</h2>
       <div class="row">
@@ -106,8 +105,7 @@ if ($_SESSION["id_utente"] == null) {
             ?>
       </div>
     </div>
-    <div class="col-4">
-      <img width="100%" src="../images/piggyback.jpg" alt="">
+    <div class="col-2">
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -23,7 +23,7 @@ try {
         $query = "INSERT INTO utenti (ID) VALUES (?);";
         $stmt = $conn->prepare($query);
         $stmt->execute([$id]);
-        header('Location: ../../html-pages/advice-pages/user-created.html');
+        header('Location: ../../php-pages/user.php');
         exit;
     }
 

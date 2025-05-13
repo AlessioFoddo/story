@@ -1,0 +1,23 @@
+.recensione{
+    padding: 1vh;
+}
+
+.titolo-recensione{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.username{
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+.username p{
+    margin: 0;
+}
+
+.username svg{
+    width: 2vw;
+}

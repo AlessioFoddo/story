@@ -11,22 +11,14 @@
     header("Location: ../index.php");
     exit();
   }else{
-  $query = "SELECT * FROM admin WHERE ID = ?";
-  $stmt = $conn->prepare($query);
-  $stmt->execute([$_SESSION["id_utente"]]);
-  if ($stmt->rowCount() == 0) {
-      header("Location: ../index.php");
-      exit();
+    $query = "SELECT * FROM admin WHERE ID = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$_SESSION["id_utente"]]);
+    if ($stmt->rowCount() != 0) {
+        header("Location: ../index.php");
+        exit();
+    }
   }
-}else{
-  $query = "SELECT * FROM admin WHERE ID = ?";
-  $stmt = $conn->prepare($query);
-  $stmt->execute([$_SESSION["id_utente"]]);
-  if ($stmt->rowCount() != 0) {
-      header("Location: ../index.php");
-      exit();
-  }
-}
   if(isset($_POST["tipo_recensioni"])){
     $type_recensioni = $_POST["tipo_recensioni"];
   } else {
@@ -40,15 +32,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/chapter.css">
     <link rel="stylesheet" href="../css/user-page.css">
-    <link rel="stylesheet" href="../css/recensioni.css">
+    <link rel="stylesheet" href="../css/recensione.css">
+    <link rel="stylesheet" href="../css/background.css">
   <title>Recensioni</title>
 </head>
 <body>
   <h1 class="text-center">CUORI IN CONTRASTO</h1>
   <form action="./user.php" class="my-2">
-    <button class="btn btn-outline-primary">
+    <button class="btn btn-outline-dark">
       BACK
     </button>
   </form>
@@ -62,14 +54,20 @@
           $stmt->execute();
           $last_recensioni = $stmt->fetchAll();
           if($last_recensioni):
-            $num_tmp = 1;
-            foreach ($last_recensioni as $lastr):      
+            foreach ($last_recensioni as $lastr):  
+              $sql = "SELECT * FROM user WHERE ID = ?";
+              $stmt = $conn->prepare($sql);
+              $stmt->execute([$lastr["ID"]]);
+              $user = $stmt->fetch();       
         ?>
         <div class="card card-capitolo my-1">
-          <div class="titolo-capitolo mt-2">
+          <div class="username mt-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="25px" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
               <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
             </svg>
+            <p>
+              <?= $user["Username"] ?>
+            </p>
           </div>
           <div class="card card-body recensione">
             <?php
@@ -78,7 +76,6 @@
           </div>
         </div>
         <?php
-            $num_tmp++;
             endforeach;
           else:
             echo "<div class='alert alert-danger'>Non ci sono recensioni!</div>";
@@ -94,7 +91,7 @@
           <option value="story" <?= $type_recensioni == "story" ? "selected" : "" ?>>Recensioni storia</option>
           <option value="chapter" <?= $type_recensioni == "chapter" ? "selected" : "" ?>>Recensioni capitoli</option>
         </select>
-        <button class="btn btn-outline-primary">
+        <button class="mb-2 btn btn-outline-dark">
           FILTRA
         </button>
       </form>
@@ -109,12 +106,19 @@
               if($story_recensione):
                 $num_tmp = 1;
                 foreach ($story_recensione as $storyfb):      
+                  $sql = "SELECT * FROM user WHERE ID = ?";
+                  $stmt = $conn->prepare($sql);
+                  $stmt->execute([$storyfb["ID"]]);
+                  $user = $stmt->fetch();  
         ?>
                   <div class="card card-capitolo my-1">
-                    <div class="titolo-capitolo mt-2">
+                    <div class="username mt-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                       </svg>
+                      <p>
+                        <?= $user["Username"] ?>
+                      </p>
                     </div>
                     <div class="card card-body recensione">
                       <?php
@@ -141,10 +145,13 @@
                 foreach ($chapter_recensione as $chpfb):      
         ?>
                   <div class="card card-capitolo my-1">
-                    <div class="titolo-capitolo mt-2">
+                    <div class="username mt-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                       </svg>
+                      <p>
+                        <?= $user["Username"] ?>
+                      </p>
                     </div>
                     <div class="card card-body recensione">
                       <?php
@@ -170,14 +177,14 @@
               if($user_recensioni):
                 $num_tmp = 1;
                 foreach ($user_recensioni as $userfb):      
-        ?>
+                  $query = "SELECT * FROM user WHERE ID = ?";
+                  $stmt = $conn->prepare($query);
+                  $stmt->execute([$userfb["ID"]]);
+                  $user = $stmt->fetch();
+                  ?>
                   <div class="card card-capitolo my-1">
-                    <div class="titolo-capitolo mt-2">
+                    <div class="username mt-2">
                       <?php
-                        $query = "SELECT * FROM user WHERE ID = ?";
-                        $stmt = $conn->prepare($query);
-                        $stmt->execute([$userfb["ID"]]);
-                        $user = $stmt->fetch();
                         if($user["profile_image"] == null):
                       ?>
                         <svg xmlns="http://www.w3.org/2000/svg" width="4vw" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
@@ -190,6 +197,9 @@
                       <?php
                         endif;
                       ?>
+                      <p>
+                        <?= $user["Username"] ?>
+                      </p>
                     </div>
                     <div class="card card-body recensione">
                       <?php

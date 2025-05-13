@@ -1,0 +1,50 @@
+body {
+  font-family: Arial, sans-serif;
+  height: 90vh;
+}
+
+label {
+  font-weight: bold;
+}
+
+.chapter{
+  width: 90%;
+  height: 100%;
+  margin: 2vh auto;
+}
+
+textarea {
+  width: 100%;
+  min-height: 30vh;
+  max-height: 50vh;
+  margin: 5vh 0;
+  resize: vertical;
+}
+
+.pdf-viewer iframe{
+  border: 3px solid black;
+}
+
+.spostamento-capitoli {
+  display: flex;
+}
+
+.spostamento-capitoli form {
+  width: 50%;
+}
+
+.caratteristiche-capitolo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-preferiti button{
+  border: none;
+  background: none;
+}
+
+.preferiti{
+  width: 3vw;
+  color: rgb(255, 166, 0);
+}

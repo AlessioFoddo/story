@@ -1,0 +1,28 @@
+main{
+    width: 100%;
+    height: 99vh;
+}
+
+.signup-card{
+    width: 100%;
+    height: 80vh;
+}
+
+.signup{
+    display: flex;
+    align-items: center;
+}
+
+.row{
+    width: 100%;
+    height: 100%;
+}
+
+.sign-form{
+    margin: 3vh;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -1,62 +1,37 @@
 <?php
 include("../db.php");
 
-if (isset($_POST['submit'])) {
-    $stmt = null;
-    try {
-        $titolo = $_POST['titolo'] ?? '';
-        $file = $_FILES['file']['tmp_name'] ?? '';
+    $titolo = $_POST['titolo'];
+    $file = $_FILES['file']['tmp_name'];
+    $riassunto = $_POST['resume'];
+    $chapter_id = $_POST['chapter_id'];
+    if (!empty($file) && is_uploaded_file($file)) {
+        $pdfContent = file_get_contents($file);
+        var_dump($chapter_id, $titolo, strlen($pdfContent), $riassunto);
 
-        if (!empty($file) && is_uploaded_file($file)) {
-            $pdfContent = file_get_contents($file);
-            
-            // Aggiunta di una transazione esplicita
-            $conn->beginTransaction();
-            
-            $sql = "INSERT INTO capitoli (titolo, file) VALUES (?, ?)";
+        if($chapter_id == ''){
+            $sql = "INSERT INTO capitoli (Titolo, File, Riassunto) VALUES (?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$titolo, $pdfContent]);
-            
-            // Verifica esplicita dell'inserimento
-            if ($stmt->rowCount() > 0) {
-                $conn->commit(); // Conferma la transazione
-                echo "File PDF caricato con successo!";
-            } else {
-                $conn->rollBack(); // Annulla in caso di errore
-                echo "Nessun record inserito";
+            $stmt->execute([$titolo, $pdfContent, $riassunto]);
+            header("Location: ../php-pages/chapters-controls.php");
+        }else{
+            $chapter_id = (int)$chapter_id;
+            $sql = "SELECT * FROM capitoli WHERE ID_Capitolo = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([$chapter_id]);
+            $chapter = $stmt->fetch();
+            if($chapter){
+                header("Location: ../php-pages/chapters-controls.php?error=Capitolo già esistente, bisogna modificarlo!");
+            }else{
+                $sql = "INSERT INTO capitoli (ID_Capitolo, Titolo, File, Riassunto) VALUES (?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([$chapter_id, $titolo, $pdfContent, $riassunto]);
+                header("Location: ../php-pages/chapters-controls.php");
             }
-        } else {
-            echo "Errore nel caricamento del file.";
         }
-    } catch(PDOException $e) {
-        if ($conn->inTransaction()) {
-            $conn->rollBack();
-        }
-        error_log("Database error: " . $e->getMessage());
-        echo "Errore del database: Operazione non riuscita";
-    } catch(Exception $e) {
-        if ($conn->inTransaction()) {
-            $conn->rollBack();
-        }
-        error_log("General error: " . $e->getMessage());
-        echo "Errore generico: Operazione non riuscita";
-    } finally {
-        // Chiude correttamente lo statement e resetta la connessione
-        if ($stmt !== null) {
-            $stmt->closeCursor();
-        }
-        $conn = null;
+        
+    } else {
+        echo "Errore nel caricamento del file.";
     }
-}
+
 ?>
-
-<form action="" method="post" enctype="multipart/form-data">
-    Titolo: <input type="text" name="titolo" required><br>
-    Seleziona PDF: <input type="file" name="file" accept="application/pdf" required><br>
-    <input type="submit" name="submit" value="Carica PDF">
-</form>
-
-<form action="../php-actions/stampa.php" method="post">
-    <input type="text" name="id_capitolo">
-    <input type="submit">
-</form>

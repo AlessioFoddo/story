@@ -3,70 +3,74 @@ USE storia;
 
 -- Tabella User (contiene utenti e admin)
 CREATE TABLE User (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(100) NOT NULL UNIQUE,
-    Password VARCHAR(255) NOT NULL
+  ID int(11) NOT NULL AUTO_INCREMENT,
+  Username varchar(100) NOT NULL,
+  Password varchar(255) NOT NULL,
+  profile_image longblob DEFAULT NULL,
+  PRIMARY KEY (ID),
+  UNIQUE KEY Username (Username)
 );
 
 -- Tabella Utenti (referenzia User)
-CREATE TABLE Utenti (
-    ID INT PRIMARY KEY,
-    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
+CREATE TABLE utenti (
+  ID int(11) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID) REFERENCES user (ID) ON DELETE CASCADE
 );
 
 -- Tabella Admin (referenzia User)
-CREATE TABLE Admin (
-    ID INT PRIMARY KEY,
-    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
+CREATE TABLE admin (
+  ID int(11) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (ID) REFERENCES user (ID) ON DELETE CASCADE
 );
 
 -- Tabella Capitoli
-CREATE TABLE Capitoli (
-    ID_Capitolo INT AUTO_INCREMENT PRIMARY KEY,
-    Titolo VARCHAR(255) NOT NULL,
-    File LONGBLOB NOT NULL
-);
-
--- Tabella Pubblicazione (associa un User a un Capitolo)
-CREATE TABLE Pubblicazione (
-    ID INT,
-    ID_Capitolo INT,
-    PRIMARY KEY (ID, ID_Capitolo),
-    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
+CREATE TABLE capitoli (
+  ID_Capitolo int(11) NOT NULL AUTO_INCREMENT,
+  Titolo varchar(255) NOT NULL,
+  File longblob NOT NULL,
+  Riassunto varchar(500) NOT NULL,
+  PRIMARY KEY (ID_Capitolo)
 );
 
 -- Tabella Recensioni
-CREATE TABLE Recensioni (
-    ID_Recensione INT AUTO_INCREMENT,
-    ID INT,
-    File LONGBLOB NOT NULL,
-    PRIMARY KEY (ID_Recensione),
-    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
+CREATE TABLE recensioni (
+  ID_Recensione int(11) NOT NULL AUTO_INCREMENT,
+  ID int(11) DEFAULT NULL,
+  File longblob NOT NULL,
+  PRIMARY KEY (ID_Recensione),
+  KEY ID (ID),
+  FOREIGN KEY (ID) REFERENCES user (ID) ON DELETE CASCADE
 );
+
 
 -- Tabella Recensione_capitolo
-CREATE TABLE Recensione_capitolo (
-    ID_Recensione INT,
-    ID_Capitolo INT,
-    PRIMARY KEY (ID_Recensione, ID_Capitolo),
-    FOREIGN KEY (ID_Recensione) REFERENCES Recensioni(ID_Recensione) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
+CREATE TABLE recensione_capitolo (
+  ID_Recensione int(11) NOT NULL,
+  ID_Capitolo int(11) NOT NULL,
+  PRIMARY KEY (ID_Recensione,ID_Capitolo),
+  KEY ID_Capitolo (ID_Capitolo),
+  FOREIGN KEY (ID_Recensione) REFERENCES recensioni (ID_Recensione) ON DELETE CASCADE,
+  FOREIGN KEY (ID_Capitolo) REFERENCES capitoli (ID_Capitolo) ON DELETE CASCADE
 );
 
-CREATE TABLE Capitoli_preferiti (
-	ID INT,
-    ID_Capitolo INT,
-    PRIMARY KEY (ID, ID_Capitolo),
-    FOREIGN KEY (ID) REFERENCES utenti(ID) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Capitolo) REFERENCES Capitoli(ID_Capitolo) ON DELETE CASCADE
+CREATE TABLE capitoli_preferiti (
+  ID int(11) NOT NULL,
+  ID_Capitolo int(11) NOT NULL,
+  PRIMARY KEY (ID,ID_Capitolo),
+  KEY ID_Capitolo (ID_Capitolo),
+  FOREIGN KEY (ID) REFERENCES utenti (ID) ON DELETE CASCADE,
+  FOREIGN KEY (ID_Capitolo) REFERENCES capitoli (ID_Capitolo) ON DELETE CASCADE
 );
 
 -- Tabella Recensione_storia
-CREATE TABLE Recensione_storia (
-    ID_Recensione INT,
-    ID INT,
-    PRIMARY KEY (ID_Recensione, ID),
-    FOREIGN KEY (ID_Recensione) REFERENCES Recensioni(ID_Recensione) ON DELETE CASCADE,
-    FOREIGN KEY (ID) REFERENCES User(ID) ON DELETE CASCADE
+CREATE TABLE recensione_storia (
+  ID_Recensione int(11) NOT NULL,
+  ID int(11) NOT NULL,
+  PRIMARY KEY (ID_Recensione,ID),
+  KEY ID (ID),
+  FOREIGN KEY (ID_Recensione) REFERENCES recensioni (ID_Recensione) ON DELETE CASCADE,
+  FOREIGN KEY (ID) REFERENCES user (ID) ON DELETE CASCADE
 );
+

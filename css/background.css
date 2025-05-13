@@ -1,0 +1,11 @@
+body {
+    background-image: url('../images/bg.jpg');
+    background-size: cover;
+}
+
+body{
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-weight: 10vw;
+  font-style: normal;
+}
