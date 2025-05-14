@@ -1,0 +1,13 @@
+body{
+    height: 90vh;
+}
+
+main{
+    height: 100%;
+}
+
+.exist{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
